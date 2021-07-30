@@ -1,0 +1,4 @@
+/blogBackend/node_modules
+/blogBackend/public
+/myblog/node_modules
+.env
