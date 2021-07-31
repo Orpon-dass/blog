@@ -9,7 +9,7 @@ import {fetchUserPost,userInfo} from '../Controller/UserController'
 import PostEditForm from './PostEditForm'
 import ProfilePicture from './ProfilePicture';
 import Allmessage from './Allmessage'
-export default function UserProfile({postFormToggle,isApiMessage,postChange,isPostStateChange,setIsLogIn}) {
+export default function UserProfile({postFormToggle,isApiMessage,postChange,isPostStateChange,setIsLogIn,showMsg}) {
     const [profileNavigation, setprofileNavigation] = useState(1)
     const [userDetailsEdit,setuserDetailsEdit]= useState(false)
     const [userpost, setuserpost] = useState([])
@@ -303,7 +303,7 @@ useEffect(() => {
                {isMessage && 
                 <div>
                     {allFriendId.map((e)=>
-                        <Allmessage key={e} friendId={e} />
+                        <Allmessage messageinfoCollect={showMsg} key={e} friendId={e} />
                     )}
                     
                 </div>

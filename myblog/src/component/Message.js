@@ -1,13 +1,15 @@
 import React from 'react'
-
 export default function Message(props) {
+    const handleMsg =()=>{
+        props.showMsg();  
+    }
     return (
         <div className="w-4/5  md:w-80 h-96 bg-pink-50 shadow-lg ring-2 ring-indigo-500 sticky bottom-0 left-full z-10 rounded-sm transition-all  ease-in duration-700 " >
             <div className="bg-indigo-500 flex justify-between" >
                 <div className="p-2 text-pink-50 text-lg font-serif">
                   Orpon dass
                </div>
-               <div className="p-2" onClick={props.showMsg}>
+               <div className="p-2" onClick={handleMsg}>
                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-red-50 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>

@@ -1,6 +1,11 @@
 const Chat = require("../model/ChatCreate");
 const jwt = require("jsonwebtoken");
 const  userCheck = require("./posts.controller")
+//getting user id
+const checkuserId =(userId)=>{
+    const user_id = jwt.verify(userId,process.env.SECRET_KEY);
+    return user_id;
+}
 //save message in database
 const saveMsg = async (request,response)=>{
     try{
@@ -27,4 +32,14 @@ const fetchMessage = async (request,response)=>{
         response.status(500).json({message:"server problem",error})
     }
 }
-module.exports ={saveMsg,fetchMessage}
+const chatMessage = async (request,response) =>{
+    try{
+        const {userId,FriendMsgId} = request.body;
+        let user_id =checkuserId(userId);
+        let message = await Chat.find({receiverId:user_id.id,senderId:FriendMsgId});
+        response.status(200).json(message)
+    }catch(error){
+      response.status.json({message:"server problem"})
+    }
+}
+module.exports ={saveMsg,fetchMessage,chatMessage}

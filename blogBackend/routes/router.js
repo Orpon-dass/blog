@@ -27,7 +27,7 @@ route.post('/api/searchpost',postController.search);
 //chat rute
 route.post("/api/messagesave",chatController.saveMsg);
 route.post("/api/messageshow",chatController.fetchMessage);
-
+route.post("/api/chatMessage",chatController.chatMessage)
 //route for test
 route.get('/api/validroute',validation,userController.valid);
 module.exports =route;

@@ -3,12 +3,14 @@ import { Route, Switch } from 'react-router-dom'
 import Header from './Header'
 import Sidebar from './Sidebar'
 import Content from './Content'
+import Message from './Message'
 import UserProfile from './UserProfile'
 import LoginRegister from './LoginRegister'
 import Postfrom from './Postfrom'
 import ShowMessage from './ShowMessage'
 export default function Blueprint() {
 
+  const [msgClick, setmsgClick] = useState(false);
   const [loginshowHide, setloginshowHide] = useState(false);
   const [togglPostForm , settogglPostForm] =useState(false);
   const [showApiMessage, setshowApiMessage] = useState(false);
@@ -69,7 +71,25 @@ export default function Blueprint() {
       window.removeEventListener("scroll", handleScroll);
     };
   });
-
+//show and hide message and fetching message
+  const showMessage = async (FriendMsgId=null) =>{
+    let userId = localStorage.getItem("token");
+    if(FriendMsgId!==null){
+      let message = await fetch("http://localhost:8000/api/chatMessage",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Accept":"application/json"
+      },
+      body:JSON.stringify({userId,FriendMsgId})
+      });
+      let messageResponse = await message.json();
+      setmsgClick(!msgClick);
+      console.log(messageResponse)
+    }else{
+      setmsgClick(!msgClick);
+    }
+  }
   const loginRegisterToggle =()=>{
     setloginshowHide(!loginshowHide);
   }
@@ -103,6 +123,7 @@ export default function Blueprint() {
       setallpost(searchResponse.post);
     }
     let len =searchValue.length;
+    console.log(len)
     if(len === 0){
       console.log("no seach value")
       postChange();
@@ -111,7 +132,7 @@ export default function Blueprint() {
     return (
       <>
          <div className="w-full">
-            <Header loginRegisterToggle={loginRegisterToggle}  isLogin={isLogin} collectSearchValue={collectSearchValue} /> 
+            <Header loginRegisterToggle={loginRegisterToggle}  isLogin={isLogin} showMsg ={showMessage} collectSearchValue={collectSearchValue} /> 
            {showApiMessage && <ShowMessage apiMsg={apiMessages} />}
 
             <div className="flex w-full xl:w-11/12 mx-auto">
@@ -158,11 +179,12 @@ export default function Blueprint() {
          {isLogin &&
          <Switch>
             <Route path="/userprofile">
-              <UserProfile setIsLogIn={setIsLogIn} isPostStateChange={isPostStateChange} postChange={postChange} isApiMessage={isApiMessage}  postFormToggle={postFormToggle}  />
+              <UserProfile setIsLogIn={setIsLogIn} showMsg ={showMessage} isPostStateChange={isPostStateChange} postChange={postChange} isApiMessage={isApiMessage}  postFormToggle={postFormToggle}  />
             </Route>
          </Switch>
          }
 
+         {msgClick ? <Message showMsg ={showMessage} /> :null }
          {loginshowHide ? <LoginRegister setIsLogIn={setIsLogIn} loginRegisterToggle={loginRegisterToggle} /> :null}
          {togglPostForm ?  <Postfrom postChange={postChange} postFormToggle={postFormToggle} isApiMessage={isApiMessage} /> :null}
         </>
