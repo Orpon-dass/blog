@@ -227,12 +227,10 @@ exports.user_profile_photo = async (request,response)=>{
 // fetch user for message
 exports.Find_user = async (request,response)=>{
   try{
-    // const {userId} =request.body;
-  //   const user = await userTb.find({
-  //   _id:userId
-  //  });
-  const aggregate = userTb.aggregate();
-  const user =await aggregate.lookup({ from: 'userphotos', localField: '_id', foreignField: 'userId', as: 'userspic' })
+    const {friendId} =request.body;
+    const user = await userDetails.findOne({
+    userId:friendId
+   });
    response.status(200).json(user)
   }catch(err){
     console.log(err)

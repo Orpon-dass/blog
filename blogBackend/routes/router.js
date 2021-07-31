@@ -15,7 +15,7 @@ route.post('/api/updateusdetails',userController.updateUserDetails);
 route.post('/api/showuserdetils',userController.userDetails);
 route.post('/api/profilepicupload',userController.profilePhotoUpload);
 route.post('/api/avatar',userController.user_profile_photo);
-route.get('/api/userfindformessage',userController.Find_user);
+route.post('/api/userfindformessage',userController.Find_user);
 //post routing
 route.post('/api/createpost',postController.createPost);
 route.post('/api/showallpost',postController.showPost);

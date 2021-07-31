@@ -50,9 +50,9 @@ const showPost = async (request,response)=>
     try{
         const {page}=request.body;
         const pagenumber =parseInt(page);
-        const perpager = 4;
-        const startIndex = (pagenumber-1)*perpager;
-        const endIndex = page*perpager;
+        const perpage = 4;
+        const startIndex = (pagenumber-1)*perpage;
+        // const endIndex = page*perpager;
         // let post = await postCollection.find().limit(limit).skip(startIndex).sort({date:"desc"}).exec();
         let aggregate = postCollection.aggregate();
         let post = await aggregate.lookup({
@@ -60,11 +60,8 @@ const showPost = async (request,response)=>
              localField:"userId",
              foreignField:"userId",
              as:"userDetails"
-        }).sort({date:"desc"}).skip(startIndex).limit(perpager);
-            response.status(200).json({post});
-            // console.log(post.useDetalis[0].collegeName)
-        
-
+        }).sort({date:"desc"}).skip(startIndex).limit(perpage);
+            response.status(200).json({post});        
     }catch(err){
       console.log(err)
       response.status(400).json({status:400,message:"post not found."});
@@ -93,7 +90,7 @@ const postByUserId = async (request,response) =>
 const updatePost = async (request,response)=>{
     try{
        const {postId,userId,postBody,Studentclass,address,salary}=request.body;
-       console.log(userId);
+    //    console.log(userId);
         if(isEmpty(postId)){
             response.json({postId:"post Id not found"});
         }else if(isEmpty(postBody)){
@@ -144,10 +141,30 @@ try{
 
 //multiple field search
 const search = async (req,res)=>{
-    const {searchValue} = req.body;
-    let regex = new RegExp(searchValue,'i');
-    let searchresponse = await postCollection.find({$or:[{postBody:regex},{Studentclass: regex},{address:regex}]});
-    res.json({post:searchresponse});
+    try{
+        const {searchValue} = req.body;
+        let finalSearchValue =searchValue.trim(); 
+        let regex = new RegExp(finalSearchValue,'i');
+        // let searchresponse = await postCollection.find({$or:[{postBody:regex},{Studentclass: regex},{address:regex}]});
+        let aggregate = postCollection.aggregate();
+        let searchresponse = await aggregate.lookup({
+                 from:"uerdetails",
+                 localField:"userId",
+                 foreignField:"userId",
+                 as:"userDetails"
+            }).match({$or:[{postBody:regex},{Studentclass: regex},{address:regex}]});
+
+            let postLen = searchresponse.length;
+            if(postLen === 0){
+                res.json({message:"No post found"})
+            }else{
+                res.json({post:searchresponse});
+            }
+
+    }catch(err){
+     console.log(err)
+     res.json({message:"server problem"})
+    }
 
 }
 //check updateMany() method

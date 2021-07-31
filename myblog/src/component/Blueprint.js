@@ -3,14 +3,12 @@ import { Route, Switch } from 'react-router-dom'
 import Header from './Header'
 import Sidebar from './Sidebar'
 import Content from './Content'
-import Message from './Message'
 import UserProfile from './UserProfile'
 import LoginRegister from './LoginRegister'
 import Postfrom from './Postfrom'
 import ShowMessage from './ShowMessage'
 export default function Blueprint() {
 
-  const [msgClick, setmsgClick] = useState(false);
   const [loginshowHide, setloginshowHide] = useState(false);
   const [togglPostForm , settogglPostForm] =useState(false);
   const [showApiMessage, setshowApiMessage] = useState(false);
@@ -72,9 +70,6 @@ export default function Blueprint() {
     };
   });
 
-  const showMessage =()=>{
-    setmsgClick(!msgClick);
-  }
   const loginRegisterToggle =()=>{
     setloginshowHide(!loginshowHide);
   }
@@ -107,15 +102,16 @@ export default function Blueprint() {
     if(searchResponse.post){
       setallpost(searchResponse.post);
     }
-    if(searchValue.lenght===0){
+    let len =searchValue.length;
+    if(len === 0){
+      console.log("no seach value")
       postChange();
     }
  }
-  
     return (
       <>
          <div className="w-full">
-            <Header loginRegisterToggle={loginRegisterToggle}  isLogin={isLogin} showMsg ={showMessage} collectSearchValue={collectSearchValue} /> 
+            <Header loginRegisterToggle={loginRegisterToggle}  isLogin={isLogin} collectSearchValue={collectSearchValue} /> 
            {showApiMessage && <ShowMessage apiMsg={apiMessages} />}
 
             <div className="flex w-full xl:w-11/12 mx-auto">
@@ -167,7 +163,6 @@ export default function Blueprint() {
          </Switch>
          }
 
-         {msgClick ? <Message showMsg ={showMessage} /> :null }
          {loginshowHide ? <LoginRegister setIsLogIn={setIsLogIn} loginRegisterToggle={loginRegisterToggle} /> :null}
          {togglPostForm ?  <Postfrom postChange={postChange} postFormToggle={postFormToggle} isApiMessage={isApiMessage} /> :null}
         </>

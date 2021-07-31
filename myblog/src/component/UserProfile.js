@@ -24,9 +24,8 @@ export default function UserProfile({postFormToggle,isApiMessage,postChange,isPo
     const [profilePicToggle,setprofilePicToggle]=useState(false);
     const [postEditPreValue,setpostEditPreValue]=useState({});
     const [isProfilecange, setisProfilecange] = useState(false);
-    const [friendId, setFriendId] = useState([]);
-    const [allfriends, setAllfriends] = useState([]);
-    const [isFriend, setisFriend] = useState(false)
+    const [allFriendId, setAllFriendId] = useState([]);
+    const [isMessage, setisMessage] = useState(false)
     const history = useHistory();
 
     const fetchUserInfo = async () =>{
@@ -205,41 +204,28 @@ let userMessage = async ()=>{
       body:JSON.stringify({userId})
     });
     let messageResponse = await message.json();
-    setFriendId(messageResponse);
-    // console.log("runtime")
+     let msgResLen = messageResponse.length;
+     if(msgResLen > 0){
+        let DuplicateFriendId = messageResponse.map((e)=>{ return e.senderId});
+        let uniqueFriendId = [...new Set(DuplicateFriendId)]
+         setAllFriendId(uniqueFriendId);
+         setisMessage(true);
+     }else{
+        setisMessage(false)
+     }
 }
 useEffect(() => {
     userMessage(); 
 },[]);
-
-useEffect(() => {
-       let userForConversation = async ()=>{
-        let userId = friendId.map((e)=>{ return e.senderId});
-         let user = await fetch("http://localhost:8000/api/userfindformessage",{
-             method:"POST",
-             headers:{
-                 "Content-Type":"application/json",
-                 "Accept":"application/json"
-             },
-             body:JSON.stringify({userId})
-         })
-         let userResponse = await user.json();
-          if(userResponse){
-            setAllfriends(userResponse);  
-            setisFriend(true); 
-          }
-    }
-    userForConversation();
-}, [friendId])
     return (
         <>
         <div className="">
           <div className="flex flex-col justify-center items-center mt-4">
               <div className="relative">
                   <div className="">
-                      {userDetails.avatar!=="" ?
+                      {userDetails.avatar ?
                        <img className="p-2 object-cover object-center w-44 h-44 rounded-full"  src={`http://localhost:8000/image/${userDetails.avatar}`} alt="userImage"/>
-                      :
+                     :
                        <img className="p-2 object-cover object-center w-44 h-44 rounded-full" src={menImg}  alt="userImage"/>
                       }
                   </div>
@@ -252,7 +238,11 @@ useEffect(() => {
               </div>
 
             <div className="flex">
+            {isUesrinfo ?
              <div onClick={postFormToggle} className="bg-indigo-500 hover:bg-indigo-700 cursor-pointer transition-colors duration-700 ease-in-out mt-2 mb-2 mr-1 font-serif text-sm px-2 py-1 rounded-md text-white">post</div>
+             :
+              <div onClick={()=>isApiMessage("please update your details first..")} className="bg-indigo-500 hover:bg-indigo-700 cursor-pointer transition-colors duration-700 ease-in-out mt-2 mb-2 mr-1 font-serif text-sm px-2 py-1 rounded-md text-white">post</div>
+            }
            { isUesrinfo ?
              <div onClick={toggleUserEditDetailsFun} className="bg-indigo-500 hover:bg-indigo-700 cursor-pointer transition-colors duration-700 ease-in-out mt-2 mb-2 ml-1 font-serif text-sm px-2 py-1 rounded-md text-white">edit</div>
              :
@@ -310,10 +300,10 @@ useEffect(() => {
           }
          {profileNavigation===3 ?
             <div className="w-full xl:w-7/12 mx-auto mt-4 rounded-md mb-6 p-5">
-               {isFriend && 
+               {isMessage && 
                 <div>
-                    {allfriends.map((e)=>
-                        <Allmessage key={e._id} friendName={e.name} />
+                    {allFriendId.map((e)=>
+                        <Allmessage key={e} friendId={e} />
                     )}
                     
                 </div>
