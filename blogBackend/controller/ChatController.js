@@ -9,8 +9,15 @@ const checkuserId =(userId)=>{
 //save message in database
 const saveMsg = async (request,response)=>{
     try{
-        const {receiverId,senderId,messageBody} =request.body;
-        const chat = new Chat({receiverId,senderId,messageBody});
+        const {receiverId,FriendIdForChatId,chatMessage} =request.body;
+        const user_id = checkuserId(receiverId);
+        const chatId = FriendIdForChatId+user_id.id;
+        const chat = new Chat({
+            receiverId:FriendIdForChatId,
+            senderId:user_id.id,
+            chatId:chatId,
+            messageBody:chatMessage
+        });
         const saveChat = await chat.save();
         if(saveChat){
             response.status(200).json({message:"message save "})
@@ -24,7 +31,7 @@ const fetchMessage = async (request,response)=>{
     try{
         const {userId} = request.body;
         const user_id = userCheck.checkuserId(userId)
-        const message = await Chat.find({receiverId:user_id.id});
+        const message = await Chat.find({$or:[{receiverId:user_id.id},{senderid:user_id.id}]});
         if(message){
             response.status(200).json(message);
         }  
@@ -34,10 +41,11 @@ const fetchMessage = async (request,response)=>{
 }
 const chatMessage = async (request,response) =>{
     try{
-        const {userId,FriendMsgId} = request.body;
+        const {userId,FriendIdForChatId} = request.body;
         let user_id =checkuserId(userId);
-        let message = await Chat.find({receiverId:user_id.id,senderId:FriendMsgId});
-        response.status(200).json(message)
+        let uniqueChatId = FriendIdForChatId+user_id.id;
+        let message = await Chat.find({$or:[{receiverId:user_id.id,senderId:FriendIdForChatId},{receiverId:FriendIdForChatId,senderId:user_id.id}]});
+        response.status(200).json({chat:message})
     }catch(error){
       response.status.json({message:"server problem"})
     }

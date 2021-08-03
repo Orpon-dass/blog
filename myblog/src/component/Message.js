@@ -1,13 +1,28 @@
-import React from 'react'
-export default function Message(props) {
+import React,{useState,useRef,useEffect} from 'react'
+const jwt = require("jsonwebtoken");
+export default function Message({message,showMsg,saveChatMsg,messageToggle,FriendName}) {
+    const userId = localStorage.getItem("token")
+    const user_Id = jwt.verify(userId,process.env.REACT_APP_SECRET_KEY);
+    const [chatMessage, setChatMessage] = useState("");
     const handleMsg =()=>{
-        props.showMsg();  
+      messageToggle();  
     }
+    const handleChatMessage =()=>{
+      saveChatMsg(chatMessage);
+      setChatMessage("");
+    }
+    const scrollref=useRef();
+    // const outScrollref =useRef();
+    useEffect(() => {
+      if(message.length>0){
+        scrollref.current.scrollIntoView({behavior:"smooth"})
+      }
+    },[message])
     return (
-        <div className="w-4/5  md:w-80 h-96 bg-pink-50 shadow-lg ring-2 ring-indigo-500 sticky bottom-0 left-full z-10 rounded-sm transition-all  ease-in duration-700 " >
+        <div className="w-4/5  mb-3 md:w-80 h-96 bg-pink-50 shadow-lg ring-2 ring-indigo-500 sticky bottom-0 left-full z-10 rounded-sm transition-all  ease-in duration-700 " >
             <div className="bg-indigo-500 flex justify-between" >
                 <div className="p-2 text-pink-50 text-lg font-serif">
-                  Orpon dass
+                  {FriendName}
                </div>
                <div className="p-2" onClick={handleMsg}>
                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-red-50 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -15,19 +30,24 @@ export default function Message(props) {
                 </svg>
                </div>
             </div>
-            <div className="w-full flex flex-col">
-               <div className="w-9/12 bg-indigo-600  px-2 py-1 text-base font-serif text-white m-2 rounded-md text-justify">that was applied at a smaller breakpoint</div>
-               <div className="w-9/12 bg-indigo-600 self-end px-2 py-1 text-base font-serif text-white m-2 rounded-md text-justify">Hellow</div>
-               <div className="w-9/12 bg-indigo-600  px-2 py-1 text-base serif text-white m-2 rounded-md">that was applied at a smaller breakpoint</div>
-               <div className="w-9/12 bg-indigo-600 self-end px-2 py-1 text-base font-serif text-white m-2 rounded-md">Hellow</div>
+            <div className="bg-red-200 h-60 overflow-y-auto">
+              { message.map((msg)=>
+              <div ref={scrollref}  key={msg._id} className="w-full flex flex-col">
+                {msg.senderId===user_Id.id  ?
+                <div className="w-9/12 bg-indigo-600 self-end  px-2 py-1 text-base font-serif text-white m-2 rounded-md text-justify">{msg.messageBody}</div>
+                  : 
+                <div className="w-9/12 bg-indigo-600 px-2 py-1 text-base font-serif text-white m-2 rounded-md text-justify">{msg.messageBody}</div>}
+              </div>
+                )
+              }
             </div>
-            <div className="flex justify-center items-center absolute w-full bottom-0 h-12 mb-2"> 
-             <div className="flex-grow m-2">
-                 <input className="w-full rounded-lg focus:ring-indigo-700 focus:ring-2" type="text" />
-             </div>
-             <div className="m-1 ">
-                  <button className="bg-indigo-600 hover:bg-indigo-700 py-1 px-2 text-white font-serif rounded-lg">Send</button>
-             </div>
+            <div className="flex justify-center items-center absolute w-full bottom-0 mb-2"> 
+                <div className="flex-grow mb-2 ml-2 mr-2">
+                    <input onChange={(e)=>setChatMessage(e.target.value)} value={chatMessage} className="w-full h-20 rounded-lg focus:ring-indigo-700 focus:ring-2" type="text" />
+                </div>
+                <div className="mb-2 mr-2 ">
+                      <button onClick={handleChatMessage} className="bg-indigo-600 hover:bg-indigo-700 py-1 px-2 text-white font-serif rounded-lg">Send</button>
+                </div>
             </div>
         </div>
     )

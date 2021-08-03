@@ -1,6 +1,6 @@
 import React,{useEffect,useState} from 'react'
 import menImg from '../img/download.png'
-export default function Allmessage({friendId,messageinfoCollect}) {
+export default function Allmessage({friendId,setFriendIdForChatId,setFriendName,messageToggle}) {
    const [friendDetails, setfriendDetails] = useState({});
      useEffect(() => {
       let userForConversation = async ()=>{
@@ -18,14 +18,15 @@ export default function Allmessage({friendId,messageinfoCollect}) {
              userForConversation()
      },[friendId]);
      const messageHandler = (value)=>{
-        //  let senderId = e.target.value;
-         messageinfoCollect(value)
+         setFriendIdForChatId(value);
+         setFriendName(friendDetails.username);
+         messageToggle();
      }
     return (
           <>
              <div className="flex bg-gray-100 h-16">
                 <div onClick={()=>{messageHandler(friendDetails.userId)}} className="flex items-center ml-3">
-                  {friendDetails.avatar !=="" &&
+                  {friendDetails.avatar !==""  &&
                     <img src={`http://localhost:8000/image/${friendDetails.avatar}`} className="object-cover object-center h-12 w-12 rounded-full" alt="userProfilePicture"/>
                   }
                   {friendDetails.avatar ==="" &&

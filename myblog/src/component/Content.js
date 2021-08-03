@@ -1,11 +1,15 @@
 import React,{useState} from 'react'
 import menImg from '../img/download.png'
 import {postDateAddTime} from '../Controller/UserController.js'
-export default function Content({login_register_toggle,buttonName,threeDot,body,studentClass,address,salary,postDate,postEditHandler,postId,deletePost,photo,isLogin,user}) {
+export default function Content({buttonName,threeDot,body,studentClass,address,salary,postDate,postEditHandler,postId,deletePost,isLogin,user,setFriendIdForChatId,userId,messageToggle}) {
     const postTime = postDateAddTime(postDate);
     const [postAction, setpostAction] = useState(false);
     const postActionControll =()=>{
         setpostAction(!postAction);
+      }
+      const messageHandler=(e)=>{
+        setFriendIdForChatId(e.target.value);
+        messageToggle();
       }
     return (
         <div>
@@ -27,7 +31,7 @@ export default function Content({login_register_toggle,buttonName,threeDot,body,
                 <div>
                     {buttonName &&
                         <div> 
-                           {isLogin && <button onClick={login_register_toggle} className="text-sm md:text-lg font-bold font-serif mt-3 mr-3 pl-3 pr-3 pt-1 pb-2 filter rounded-full bg-indigo-500 text-opacity-100 text-white hover:bg-indigo-700">{buttonName}</button>}
+                           {isLogin && <button onClick={messageHandler} value={userId} className="text-sm md:text-lg font-bold font-serif mt-3 mr-3 pl-3 pr-3 pt-1 pb-2 filter rounded-full bg-indigo-500 text-opacity-100 text-white hover:bg-indigo-700">message</button>}
                         </div>
                     }
                     {

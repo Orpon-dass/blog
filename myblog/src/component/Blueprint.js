@@ -21,7 +21,9 @@ export default function Blueprint() {
   const [page, setpage] = useState(1);
   const [bottom, setbottom]  = useState(false);
   const [isLogin,setIsLogIn] = useState(false);
-  // const [mount, setmount] = useState(true)
+  const [chatMessage, setChatMessage] = useState([]);
+  const [FriendIdForChatId, setFriendIdForChatId] = useState(null);
+  const [FriendName, setFriendName] = useState("")
    useEffect(() => {
      let userId = localStorage.getItem("token");
      if(userId!==null){
@@ -71,25 +73,50 @@ export default function Blueprint() {
       window.removeEventListener("scroll", handleScroll);
     };
   });
-//show and hide message and fetching message
-  const showMessage = async (FriendMsgId=null) =>{
-    let userId = localStorage.getItem("token");
-    if(FriendMsgId!==null){
-      let message = await fetch("http://localhost:8000/api/chatMessage",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "Accept":"application/json"
-      },
-      body:JSON.stringify({userId,FriendMsgId})
-      });
-      let messageResponse = await message.json();
-      setmsgClick(!msgClick);
-      console.log(messageResponse)
-    }else{
-      setmsgClick(!msgClick);
-    }
+  // message toggle
+  const messageToggle =()=>{
+    setmsgClick(!msgClick);
   }
+  //show and hide message and fetching message
+ 
+  const [isSaveMessage, setisSaveMessage] = useState(false)
+  useEffect(() => {
+    const showMessage = async () =>{
+      let userId = localStorage.getItem("token");
+      if(FriendIdForChatId!==null){
+        let message = await fetch("http://localhost:8000/api/chatMessage",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "Accept":"application/json"
+        },
+        body:JSON.stringify({userId,FriendIdForChatId})
+        });
+        let messageResponse = await message.json();
+        setChatMessage(messageResponse.chat)
+      }
+    }
+    showMessage()
+  }, [FriendIdForChatId,isSaveMessage ])
+  //save user message
+  const saveChatMsg =async (userMessage=null)=>{
+    if(userMessage!==null){
+      const chatMessage= userMessage;
+      const receiverId = localStorage.getItem("token");
+    let saveMessage = await fetch("http://localhost:8000/api/messagesave",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "Accept":"application/json"
+        },
+        body:JSON.stringify({receiverId,FriendIdForChatId,chatMessage})
+      });
+      let saveMessageResponse =await saveMessage.json();
+      if(saveMessageResponse.message){
+        setisSaveMessage(!isSaveMessage) 
+      }
+    }
+   }
   const loginRegisterToggle =()=>{
     setloginshowHide(!loginshowHide);
   }
@@ -123,16 +150,14 @@ export default function Blueprint() {
       setallpost(searchResponse.post);
     }
     let len =searchValue.length;
-    console.log(len)
     if(len === 0){
-      console.log("no seach value")
       postChange();
     }
  }
     return (
       <>
          <div className="w-full">
-            <Header loginRegisterToggle={loginRegisterToggle}  isLogin={isLogin} showMsg ={showMessage} collectSearchValue={collectSearchValue} /> 
+            <Header loginRegisterToggle={loginRegisterToggle}  isLogin={isLogin} showMsg ={messageToggle} collectSearchValue={collectSearchValue} /> 
            {showApiMessage && <ShowMessage apiMsg={apiMessages} />}
 
             <div className="flex w-full xl:w-11/12 mx-auto">
@@ -149,10 +174,12 @@ export default function Blueprint() {
                         allpost.map((post)=>
                         
                         <Content key ={post._id}
+                            messageToggle={messageToggle}
                             isLogin={isLogin}
+                            userId={post.userId}
+                            setFriendIdForChatId={setFriendIdForChatId}
                             body={post.postBody}
                             user ={post.userDetails[0]}
-                            photo={post.avatar}
                             studentClass={post.Studentclass}
                             address={post.address}
                             salary={post.salary}
@@ -179,12 +206,13 @@ export default function Blueprint() {
          {isLogin &&
          <Switch>
             <Route path="/userprofile">
-              <UserProfile setIsLogIn={setIsLogIn} showMsg ={showMessage} isPostStateChange={isPostStateChange} postChange={postChange} isApiMessage={isApiMessage}  postFormToggle={postFormToggle}  />
+              <UserProfile messageToggle={messageToggle}  setFriendName={setFriendName} setFriendIdForChatId={setFriendIdForChatId} setIsLogIn={setIsLogIn} isPostStateChange={isPostStateChange} postChange={postChange} isApiMessage={isApiMessage}  postFormToggle={postFormToggle}  />
             </Route>
          </Switch>
          }
 
-         {msgClick ? <Message showMsg ={showMessage} /> :null }
+         {msgClick ? <Message FriendName={FriendName} saveChatMsg={saveChatMsg} message={chatMessage}  messageToggle={messageToggle} /> :null }
+         
          {loginshowHide ? <LoginRegister setIsLogIn={setIsLogIn} loginRegisterToggle={loginRegisterToggle} /> :null}
          {togglPostForm ?  <Postfrom postChange={postChange} postFormToggle={postFormToggle} isApiMessage={isApiMessage} /> :null}
         </>

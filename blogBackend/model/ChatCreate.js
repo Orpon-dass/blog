@@ -9,6 +9,9 @@ const ChatSchema = new Schema({
      senderId:{
          type:String
      },
+     chatId:{
+      type:String,
+     },
      messagetime: {
           type:Date,
           default:Date.now()
