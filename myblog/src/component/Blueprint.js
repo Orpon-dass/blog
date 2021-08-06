@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect,useRef} from 'react'
 import { Route, Switch } from 'react-router-dom'
 import Header from './Header'
 import Sidebar from './Sidebar'
@@ -8,6 +8,8 @@ import UserProfile from './UserProfile'
 import LoginRegister from './LoginRegister'
 import Postfrom from './Postfrom'
 import ShowMessage from './ShowMessage'
+import { io } from "socket.io-client";
+const  jwt = require("jsonwebtoken");
 export default function Blueprint() {
 
   const [msgClick, setmsgClick] = useState(false);
@@ -23,7 +25,27 @@ export default function Blueprint() {
   const [isLogin,setIsLogIn] = useState(false);
   const [chatMessage, setChatMessage] = useState([]);
   const [FriendIdForChatId, setFriendIdForChatId] = useState(null);
-  const [FriendName, setFriendName] = useState("")
+  const [FriendName, setFriendName] = useState("");
+  const [isSaveMessage, setisSaveMessage] = useState(false);
+  // const [arivalMessage, setArivalMessage] = useState(null)
+
+//socket code for real time chat message 
+  const socket = useRef();
+    useEffect(() => {
+      socket.current=io("ws://localhost:8000");
+      let user = localStorage.getItem("token");
+      const user_id = jwt.verify(user,process.env.REACT_APP_SECRET_KEY);
+      socket.current.emit("addUserId",user_id.id);
+      socket.current.on("socketid",(arg)=>{
+       console.log(arg)
+      })
+      socket.current.on("socketMessage",(msg)=>{
+        setChatMessage((prev)=>[...prev,msg])
+         })
+    }, []);
+    console.log(chatMessage)
+  //socket code 
+
    useEffect(() => {
      let userId = localStorage.getItem("token");
      if(userId!==null){
@@ -31,7 +53,8 @@ export default function Blueprint() {
      }else{
       setIsLogIn(false)
      }
-   },[isLogin])
+   },[isLogin]);
+
   //post api call 
   useEffect(() => {
   const postApiCall = async ()=>{
@@ -59,6 +82,7 @@ export default function Blueprint() {
 }
     postApiCall();  
   },[page,isPostStateChange]);
+
   //set page number
   useEffect(()=>{
     function handleScroll() {
@@ -73,13 +97,13 @@ export default function Blueprint() {
       window.removeEventListener("scroll", handleScroll);
     };
   });
+
   // message toggle
   const messageToggle =()=>{
     setmsgClick(!msgClick);
   }
+
   //show and hide message and fetching message
- 
-  const [isSaveMessage, setisSaveMessage] = useState(false)
   useEffect(() => {
     const showMessage = async () =>{
       let userId = localStorage.getItem("token");
@@ -97,13 +121,16 @@ export default function Blueprint() {
       }
     }
     showMessage()
-  }, [FriendIdForChatId,isSaveMessage ])
+  }, [FriendIdForChatId,isSaveMessage ]);
+
   //save user message
   const saveChatMsg =async (userMessage=null)=>{
     if(userMessage!==null){
       const chatMessage= userMessage;
       const receiverId = localStorage.getItem("token");
-    let saveMessage = await fetch("http://localhost:8000/api/messagesave",{
+      const user_id = jwt.verify(receiverId,process.env.REACT_APP_SECRET_KEY)
+      socket.current.emit("messagedetails",{senderId:user_id.id,receiverId:FriendIdForChatId,messageBody:chatMessage})
+     let saveMessage = await fetch("http://localhost:8000/api/messagesave",{
         method:"POST",
         headers:{
           "Content-Type":"application/json",
@@ -117,12 +144,15 @@ export default function Blueprint() {
       }
     }
    }
+
   const loginRegisterToggle =()=>{
     setloginshowHide(!loginshowHide);
   }
+
   const postFormToggle = ()=>{
     settogglPostForm(!togglPostForm);
   }
+
   const isApiMessage=(arg)=>{
     setapiMessages(arg);
     setshowApiMessage(true);
@@ -130,11 +160,13 @@ export default function Blueprint() {
     setshowApiMessage(false);
     },2000);
   }
+
   //for post side effect
   const postChange = async ()=>{
     setisPostStateChange(!isPostStateChange)
     setpage(1);
   }
+
  //search by user 
  const collectSearchValue = async (searchValue)=>{
   let search = await fetch("http://localhost:8000/api/searchpost",{
@@ -154,6 +186,8 @@ export default function Blueprint() {
       postChange();
     }
  }
+
+ 
     return (
       <>
          <div className="w-full">

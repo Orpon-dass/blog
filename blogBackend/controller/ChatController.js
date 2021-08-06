@@ -11,11 +11,9 @@ const saveMsg = async (request,response)=>{
     try{
         const {receiverId,FriendIdForChatId,chatMessage} =request.body;
         const user_id = checkuserId(receiverId);
-        const chatId = FriendIdForChatId+user_id.id;
         const chat = new Chat({
             receiverId:FriendIdForChatId,
             senderId:user_id.id,
-            chatId:chatId,
             messageBody:chatMessage
         });
         const saveChat = await chat.save();
@@ -43,7 +41,6 @@ const chatMessage = async (request,response) =>{
     try{
         const {userId,FriendIdForChatId} = request.body;
         let user_id =checkuserId(userId);
-        let uniqueChatId = FriendIdForChatId+user_id.id;
         let message = await Chat.find({$or:[{receiverId:user_id.id,senderId:FriendIdForChatId},{receiverId:FriendIdForChatId,senderId:user_id.id}]});
         response.status(200).json({chat:message})
     }catch(error){
