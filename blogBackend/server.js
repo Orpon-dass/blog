@@ -33,6 +33,7 @@ const foundUser=(userid)=>{
    return users.find((user)=>user.userid===userid);
    console.log(userid)
 }
+
 //socket connection 
 io.on("connection", socket => { 
     //console.log(`user socket id is :${socket.id}`)

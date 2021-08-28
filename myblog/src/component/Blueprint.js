@@ -1,13 +1,15 @@
 import React,{useState,useEffect,useRef} from 'react'
 import { Route, Switch } from 'react-router-dom'
 import Header from './Header'
-import Sidebar from './Sidebar'
+// import Sidebar from './Sidebar'
 import Content from './Content'
 import Message from './Message'
 import UserProfile from './UserProfile'
 import LoginRegister from './LoginRegister'
 import Postfrom from './Postfrom'
 import ShowMessage from './ShowMessage'
+// import ClassList from './ClassList'
+import PostSkeleton from './PostSkeleton'
 import { io } from "socket.io-client";
 const  jwt = require("jsonwebtoken");
 export default function Blueprint() {
@@ -34,18 +36,20 @@ export default function Blueprint() {
     useEffect(() => {
       socket.current=io("ws://localhost:8000");
       let user = localStorage.getItem("token");
-      const user_id = jwt.verify(user,process.env.REACT_APP_SECRET_KEY);
-      socket.current.emit("addUserId",user_id.id);
-      socket.current.on("socketid",(arg)=>{
-       console.log(arg)
-      })
-      socket.current.on("socketMessage",(msg)=>{
-        setChatMessage((prev)=>[...prev,msg])
-         })
-    }, []);
-    console.log(chatMessage)
-  //socket code 
+      if(user){
+        const user_id = jwt.verify(user,process.env.REACT_APP_SECRET_KEY);
+        socket.current.emit("addUserId",user_id.id);
+        socket.current.on("socketid",(arg)=>{
+         console.log(arg)
+        })
+        socket.current.on("socketMessage",(msg)=>{
+          setChatMessage((prev)=>[...prev,msg])
+           })
 
+      }
+    }, []);
+
+  //socket code 
    useEffect(() => {
      let userId = localStorage.getItem("token");
      if(userId!==null){
@@ -76,7 +80,7 @@ export default function Blueprint() {
           setispost(true)
         }
       }
-      if(postResult.status===400){
+      if(postResult.post.length===0){
             setbottom(true)
       }
 }
@@ -122,14 +126,24 @@ export default function Blueprint() {
     }
     showMessage()
   }, [FriendIdForChatId,isSaveMessage ]);
-
+// make unique id for message
+function makeid(l)
+{
+var text = "";
+var char_list = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+for(var i=0; i < l; i++ )
+{  
+text += char_list.charAt(Math.floor(Math.random() * char_list.length));
+}
+return text;
+}
   //save user message
   const saveChatMsg =async (userMessage=null)=>{
     if(userMessage!==null){
       const chatMessage= userMessage;
       const receiverId = localStorage.getItem("token");
       const user_id = jwt.verify(receiverId,process.env.REACT_APP_SECRET_KEY)
-      socket.current.emit("messagedetails",{senderId:user_id.id,receiverId:FriendIdForChatId,messageBody:chatMessage})
+      socket.current.emit("messagedetails",{_id:makeid(16),senderId:user_id.id,receiverId:FriendIdForChatId,messageBody:chatMessage})
      let saveMessage = await fetch("http://localhost:8000/api/messagesave",{
         method:"POST",
         headers:{
@@ -194,15 +208,15 @@ export default function Blueprint() {
             <Header loginRegisterToggle={loginRegisterToggle}  isLogin={isLogin} showMsg ={messageToggle} collectSearchValue={collectSearchValue} /> 
            {showApiMessage && <ShowMessage apiMsg={apiMessages} />}
 
-            <div className="flex w-full xl:w-11/12 mx-auto">
-              <div className="w-1/5 hidden mr-5 lg:block">
+            <div className="flex w-full xl:w-9/12 mx-auto">
+              {/* <div className="w-1/5 hidden mr-5 lg:block">
                   <Route exact path="/">
-                    <Sidebar />
+                    <ClassList />
                   </Route>
-              </div>
-              
-                <div  className="w-full lg:w-4/5"> 
-                  {ispost &&
+              </div> */}
+              <Route exact path="/">
+                <div  className="w-full lg:w-4/5 mx-auto"> 
+                  {ispost ?
                     <Route exact path="/">
                       {
                         allpost.map((post)=>
@@ -219,20 +233,29 @@ export default function Blueprint() {
                             salary={post.salary}
                             postDate={post.date} 
                             login_register_toggle={loginRegisterToggle}
-                            buttonName={"proposal"}
+                            buttonName="message"
+                            isApiMessage={isApiMessage}
                             />
                         )
                       }
                     
-                    </Route>
-                    }
+                     </Route>
+                   :
+                   <div>
+                   <PostSkeleton />
+                   <PostSkeleton />
+                   <PostSkeleton />
+                   <PostSkeleton />
+                   </div>
+                   }
+                     
                   {bottom &&
                     <div className="text-center mt-8 font-serif font-medium text-xl" >
                       No more post...
                     </div>
                   }
                 </div>
-
+                </Route>
              
             </div>
          </div>

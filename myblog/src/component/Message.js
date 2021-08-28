@@ -19,7 +19,7 @@ export default function Message({message,showMsg,saveChatMsg,messageToggle,Frien
       }
     },[message])
     return (
-        <div className="w-4/5  mb-3 md:w-80 h-96 bg-pink-50 shadow-lg ring-2 ring-indigo-500 sticky bottom-0 left-full z-10 rounded-sm transition-all  ease-in duration-700 " >
+        <div className="w-4/5  mb-3 md:w-80 h-96 bg-pink-50  shadow-lg ring-2 ring-indigo-600 sticky bottom-0 left-full z-10 rounded-sm transition-all  ease-in duration-700 " >
             <div className="bg-indigo-500 flex justify-between" >
                 <div className="p-2 text-pink-50 text-lg font-serif">
                   {FriendName}
@@ -30,13 +30,13 @@ export default function Message({message,showMsg,saveChatMsg,messageToggle,Frien
                 </svg>
                </div>
             </div>
-            <div className="bg-red-200 h-60 overflow-y-auto">
+            <div className="h-60 overflow-y-auto">
               { message.map((msg)=>
               <div ref={scrollref}  key={msg._id} className="w-full flex flex-col">
                 {msg.senderId===user_Id.id  ?
-                <div className="w-9/12 bg-indigo-600 self-end  px-2 py-1 text-base font-serif text-white m-2 rounded-md text-justify">{msg.messageBody}</div>
+                <div className="w-9/12 bg-indigo-500 self-end  px-2 py-1 text-base font-serif text-white m-2 rounded-md text-justify">{msg.messageBody}</div>
                   : 
-                <div className="w-9/12 bg-indigo-600 px-2 py-1 text-base font-serif text-white m-2 rounded-md text-justify">{msg.messageBody}</div>}
+                <div className="w-9/12 bg-indigo-500 px-2 py-1 text-base font-serif text-white m-2 rounded-md text-justify">{msg.messageBody}</div>}
               </div>
                 )
               }

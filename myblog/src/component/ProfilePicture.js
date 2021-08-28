@@ -20,7 +20,7 @@ export default function ProfilePicture({profileToggle,isApiMessage,profileChange
          profileToggle();
     }
     return (
-        <div className="bg-gray-200 rounded-md w-4/5 fixed md:w-1/3 xl:w-1/5  top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+        <div className="bg-gray-200 rounded-md w-11/12 fixed md:w-2/3 xl:w-2/5  top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
             <div className="flex justify-end">
                 <svg onClick={profileToggle} xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 mx-2  mt-1 cursor-pointer text-red-500 hover:text-red-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />

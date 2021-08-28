@@ -27,7 +27,6 @@ export default function UserProfile({postFormToggle,isApiMessage,postChange,isPo
     const [allFriendId, setAllFriendId] = useState([]);
     const [isMessage, setisMessage] = useState(false)
     const history = useHistory();
-
     const fetchUserInfo = async () =>{
     let userInformation = await userInfo("http://localhost:8000/api/showuserdetils");
     if(userInformation.info){
@@ -257,7 +256,6 @@ useEffect(() => {
               <div onClick={()=>setprofileNavigation(1)} className="px-2 py-1 rounded-md ml-1  text-gray-700 hover:text-white font-serif hover:bg-indigo-800 transition-colors duration-1000 ease-in-out cursor-pointer">Post </div>
               <div onClick={handeUserinfo} className="px-2 py-1 rounded-md text-gray-700 hover:text-white font-serif hover:bg-indigo-800 transition-colors duration-1000 ease-in-out cursor-pointer">About</div>
               <div onClick={()=>setprofileNavigation(3)} className="px-2 py-1 rounded-md mr-1 text-gray-700 hover:text-white font-serif hover:bg-indigo-800 transition-colors duration-1000 ease-in-out cursor-pointer">Message</div>
-              <div className="px-2 py-1 rounded-md  text-gray-700 hover:text-white font-serif hover:bg-indigo-800 transition-colors duration-1000 ease-in-out cursor-pointer">Proposal</div>
               <div onClick={logOutUser} className="px-2 py-1 rounded-md  text-gray-700 hover:text-white font-serif hover:bg-indigo-800 transition-colors duration-1000 ease-in-out cursor-pointer">Logout</div>
           </div>
           {
@@ -277,7 +275,8 @@ useEffect(() => {
                       salary={post.salary} 
                       body={post.postBody}
                       key={post._id} 
-                      threeDot ={"..."}/>
+                      threeDot ={"..."}
+                      />
                       )}
             {isPost ? null : <div className="text-center m-3 font-serif font-semibold text-red-500">
               post not found

@@ -5,6 +5,7 @@ const bcrypt =require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {isEmail,isEmpty} =require("validator");
 const userDetails = require("../model/user.details");
+const fs = require("fs");
 exports.createUser = async (request,response)=>{
   let {name,email,password} =request.body;
   //let validate form field
@@ -189,6 +190,11 @@ exports.profilePhotoUpload= async (request,response)=>{
         }
      });
      if(originalFile){
+      let deleteuserPhoto = await userDetails.findOne({userId:user_Id.id});
+       fs.unlink(__dirname + './../public/image/'+deleteuserPhoto.avatar,function(err){
+        if(err) return console.log(err)
+        console.log("file deleted successfuly")
+       })
       let savePhoto = await userDetails.findOneAndUpdate({userId:user_Id.id},{
        userId:user_Id.id,
        avatar:profilePicName

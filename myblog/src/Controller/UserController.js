@@ -39,4 +39,5 @@ export const postDateAddTime =(arg)=>{
     const finalDate =`${postdate}.${month}.${year}`;
     return finalDate ;
 } 
+// calculate time for post 
 
