@@ -1,7 +1,18 @@
 import React,{useEffect,useState} from 'react'
+import FriendDetails from './FriendDetails';
 import menImg from '../img/download.png'
-export default function Allmessage({friendId,setFriendIdForChatId,setFriendName,messageToggle}) {
+export default function Allmessage({friendId,setFriendIdForChatId,setFriendName,messageToggle,onlineUser}) {
    const [friendDetails, setfriendDetails] = useState({});
+   const [showFriendDetails, setShowFriendDetails] = useState(false);
+   const [isOnline, setIsOnline] = useState(null)
+   useEffect(() => {
+    const onlineFriend = onlineUser.find((user)=>user.userid===friendDetails.userId);
+    if(onlineFriend){
+      setIsOnline(true)
+    }else{
+      setIsOnline(false)
+    }
+  })
      useEffect(() => {
       let userForConversation = async ()=>{
                   let user = await fetch("http://localhost:8000/api/userfindformessage",{
@@ -37,11 +48,12 @@ export default function Allmessage({friendId,setFriendIdForChatId,setFriendName,
                   }
                 </div>
                 <div onClick={()=>{messageHandler(friendDetails.userId)}} className="mt-1 flex-grow  ml-3 cursor-pointer font-serif font-semibold text-gray-700 text-lg">
-                  {friendDetails.username}
-                  <div className="text-sm font-normal">start conersation</div>
+                  {friendDetails.username} 
+                  <div className={isOnline ?"text-sm font-normal text-green-500":"text-sm font-normal"}>{isOnline ? "Online" : "Offline" }</div>
                 </div>
-                <div className="p-2 justify-self-end ml-3 text-sm">2 min ago</div>
+                <div onClick={()=>setShowFriendDetails(true)} className="p-3 ursor-pointer justify-self-end ml-3 text-sm font-serif font-semibold text-indigo-500">View Details</div>
              </div>
+              {showFriendDetails &&<FriendDetails friendDetails={friendDetails} setShowFriendDetails={setShowFriendDetails} />}
              </>
 
     )

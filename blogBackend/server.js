@@ -45,12 +45,15 @@ io.on("connection", socket => {
     
     //user chat message
     socket.on("messagedetails",(arg)=>{
-        let frientId = foundUser(arg.receiverId); 
-        io.to(frientId.socketid).emit("socketMessage",arg);
+        let friendId = foundUser(arg.receiverId);
+        if(friendId){
+            io.to(friendId.socketid).emit("socketMessage",arg);
+        }
     });
     //user disconnect
     socket.on("disconnect",()=>{
         removeuser(socket.id)
+        io.emit("socketid",users);
         console.log("a user disconnected..")
     })
 

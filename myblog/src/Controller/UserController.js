@@ -30,14 +30,14 @@ let info = userResponse.userDetails;
 let status=userResponse.status;
 return {info,status}
 }
-export const postDateAddTime =(arg)=>{
-    const date = new Date(arg);
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const year = date.getFullYear();
-    const month = months[date.getMonth()];
-    const postdate = date.getDate();
-    const finalDate =`${postdate}.${month}.${year}`;
-    return finalDate ;
-} 
+// export const postDateAddTime =(arg)=>{
+//     const date = new Date(arg);
+//     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+//     const year = date.getFullYear();
+//     const month = months[date.getMonth()];
+//     const postdate = date.getDate();
+//     const finalDate =`${postdate}.${month}.${year}`;
+//     return finalDate ;
+// } 
 // calculate time for post 
 

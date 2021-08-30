@@ -29,8 +29,7 @@ export default function Blueprint() {
   const [FriendIdForChatId, setFriendIdForChatId] = useState(null);
   const [FriendName, setFriendName] = useState("");
   const [isSaveMessage, setisSaveMessage] = useState(false);
-  // const [arivalMessage, setArivalMessage] = useState(null)
-
+  const [onlineUser, setOnlineUser] = useState([])
 //socket code for real time chat message 
   const socket = useRef();
     useEffect(() => {
@@ -40,7 +39,7 @@ export default function Blueprint() {
         const user_id = jwt.verify(user,process.env.REACT_APP_SECRET_KEY);
         socket.current.emit("addUserId",user_id.id);
         socket.current.on("socketid",(arg)=>{
-         console.log(arg)
+          setOnlineUser(arg)
         })
         socket.current.on("socketMessage",(msg)=>{
           setChatMessage((prev)=>[...prev,msg])
@@ -263,7 +262,7 @@ return text;
          {isLogin &&
          <Switch>
             <Route path="/userprofile">
-              <UserProfile messageToggle={messageToggle}  setFriendName={setFriendName} setFriendIdForChatId={setFriendIdForChatId} setIsLogIn={setIsLogIn} isPostStateChange={isPostStateChange} postChange={postChange} isApiMessage={isApiMessage}  postFormToggle={postFormToggle}  />
+              <UserProfile onlineUser={onlineUser} messageToggle={messageToggle}  setFriendName={setFriendName} setFriendIdForChatId={setFriendIdForChatId} setIsLogIn={setIsLogIn} isPostStateChange={isPostStateChange} postChange={postChange} isApiMessage={isApiMessage}  postFormToggle={postFormToggle}  />
             </Route>
          </Switch>
          }

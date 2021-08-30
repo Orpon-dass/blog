@@ -1,8 +1,7 @@
 import React,{useEffect, useState} from 'react'
+import moment from 'moment'; 
 import menImg from '../img/download.png'
-import {postDateAddTime} from '../Controller/UserController.js'
 export default function Content({buttonName,threeDot,body,studentClass,address,salary,postDate,postEditHandler,postId,deletePost,isLogin,user,setFriendIdForChatId,userId,messageToggle,isApiMessage}) {
-    const postTime = postDateAddTime(postDate);
     const [postAction, setpostAction] = useState(false);
     const [userinformation, setuserinformation] = useState(null)
     useEffect(() => {
@@ -47,7 +46,7 @@ export default function Content({buttonName,threeDot,body,studentClass,address,s
                 </div>
                 <div className="flex-grow">
                     <div className="pt-3 pl-3 text-sm md:text-xl font-semibold text-gray-600 font-serif subpixel-antialiased">{user.username}</div>
-                    <div className="pl-3 text-indigo-700 text-sm" >{postTime}</div>
+                    <div className="pl-3 text-indigo-700 text-sm" >{moment(postDate).fromNow()}</div>
                 </div>
                 <div>
                     {buttonName &&
