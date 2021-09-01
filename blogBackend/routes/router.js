@@ -4,6 +4,7 @@ const userController = require("../controller/user.controller");
 const postController = require('../controller/posts.controller')
 const validation = require("../validateRoute/valid.route.js");
 const chatController = require("../controller/ChatController");
+const adminController = require("../controller/admin.controller")
 const route =express.Router();
 route.get('/',render.homeRoute);
 //user routing
@@ -27,7 +28,10 @@ route.post('/api/searchpost',postController.search);
 //chat rute
 route.post("/api/messagesave",chatController.saveMsg);
 route.post("/api/messageshow",chatController.fetchMessage);
-route.post("/api/chatMessage",chatController.chatMessage)
+route.post("/api/chatMessage",chatController.chatMessage);
+//admin route 
+route.post("/api/admin/login",adminController.adminlogin);
+route.get("/api/admin/register",adminController.adminRegister);
 //route for test
 route.get('/api/validroute',validation,userController.valid);
 module.exports =route;

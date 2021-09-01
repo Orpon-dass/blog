@@ -35,7 +35,7 @@ export default function Allmessage({friendId,setFriendIdForChatId,setFriendName,
      }
     return (
           <>
-             <div className="flex bg-gray-100 h-16 relative">
+             <div className="flex bg-gray-100 h-16 relative mr-2 ml-2">
                 <div onClick={()=>{messageHandler(friendDetails.userId)}} className="flex items-center ml-3">
                   {friendDetails.avatar !==""  &&
                     <img src={`http://localhost:8000/image/${friendDetails.avatar}`} className="object-cover object-center h-12 w-12 rounded-full" alt="userProfilePicture"/>
@@ -47,7 +47,7 @@ export default function Allmessage({friendId,setFriendIdForChatId,setFriendName,
                     <img src={menImg} className="object-cover object-center h-12 w-12 rounded-full" alt="userProfilePicture"/>
                   }
                 </div>
-                <div onClick={()=>{messageHandler(friendDetails.userId)}} className="mt-1 flex-grow  ml-3 cursor-pointer font-serif font-semibold text-gray-700 text-lg">
+                <div onClick={()=>{messageHandler(friendDetails.userId)}} className="mt-1 flex-grow  ml-3 cursor-pointer font-serif font-semibold text-gray-700 text-md md:text-lg">
                   {friendDetails.username} 
                   <div className={isOnline ?"text-sm font-normal text-green-500":"text-sm font-normal"}>{isOnline ? "Online" : "Offline" }</div>
                 </div>

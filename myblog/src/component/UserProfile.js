@@ -252,7 +252,7 @@ useEffect(() => {
           <div className="mb-5 text-center text-xl font-serif font-semibold text-gray-700 ">
              {userDetails.username}
           </div>
-          <div className="w-full xl:w-7/12 mx-auto bg-gray-100  h-14 flex justify-around items-center rounded">
+          <div className="w-full xl:w-9/12 mx-auto bg-gray-100  h-14 flex justify-around items-center rounded">
               <div onClick={()=>setprofileNavigation(1)} className="px-2 py-1 rounded-md ml-1  text-gray-700 hover:text-white font-serif hover:bg-indigo-800 transition-colors duration-1000 ease-in-out cursor-pointer">Post </div>
               <div onClick={handeUserinfo} className="px-2 py-1 rounded-md text-gray-700 hover:text-white font-serif hover:bg-indigo-800 transition-colors duration-1000 ease-in-out cursor-pointer">About</div>
               <div onClick={()=>setprofileNavigation(3)} className="px-2 py-1 rounded-md mr-1 text-gray-700 hover:text-white font-serif hover:bg-indigo-800 transition-colors duration-1000 ease-in-out cursor-pointer">Message</div>
@@ -260,7 +260,7 @@ useEffect(() => {
           </div>
           {
               profileNavigation===1 ?
-          <div className="w-full xl:w-7/12 mx-auto mt-4 mb-5">
+          <div className="w-full xl:w-9/12 mx-auto mt-4 mb-5">
               { isPost &&
                   userpost.map((post)=>
                       <Content 
@@ -288,7 +288,7 @@ useEffect(() => {
           {
               profileNavigation===2  ?
               
-          <div className="w-full xl:w-7/12 mx-auto mt-4">
+          <div className="w-full xl:w-9/12 mx-auto mt-4">
              
              {isUesrinfo ? <Userinfo  savedResponse={userDetails} /> : <div className="text-center m-3 font-serif font-semibold text-red-500">
                    please update your information
@@ -298,7 +298,7 @@ useEffect(() => {
           :null
           }
          {profileNavigation===3 ?
-            <div className="w-full xl:w-7/12 mx-auto mt-4 rounded-md mb-6 p-5">
+            <div className="w-full xl:w-9/12 mx-auto mt-4 rounded-md mb-6">
                {isMessage && 
                 <div>
                     {allFriendId.map((e)=>

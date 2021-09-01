@@ -45,7 +45,7 @@ export default function Content({buttonName,threeDot,body,studentClass,address,s
 
                 </div>
                 <div className="flex-grow">
-                    <div className="pt-3 pl-3 text-sm md:text-xl font-semibold text-gray-600 font-serif subpixel-antialiased">{user.username}</div>
+                    <div className="pt-3 pl-3 text-md md:text-xl font-semibold text-gray-600 font-serif subpixel-antialiased">{user.username}</div>
                     <div className="pl-3 text-indigo-700 text-sm" >{moment(postDate).fromNow()}</div>
                 </div>
                 <div>

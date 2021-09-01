@@ -1,17 +1,18 @@
 import React,{useState,useEffect,useRef} from 'react'
 import { Route, Switch } from 'react-router-dom'
-import Header from './Header'
-// import Sidebar from './Sidebar'
-import Content from './Content'
-import Message from './Message'
-import UserProfile from './UserProfile'
-import LoginRegister from './LoginRegister'
-import Postfrom from './Postfrom'
-import ShowMessage from './ShowMessage'
-// import ClassList from './ClassList'
-import PostSkeleton from './PostSkeleton'
+import Header from './Header';
+import Content from './Content';
+import Message from './Message';
+import UserProfile from './UserProfile';
+import LoginRegister from './LoginRegister';
+import Postfrom from './Postfrom';
+import ShowMessage from './ShowMessage';
+import ErrorPage from './ErrorPage';
+import PostSkeleton from './PostSkeleton';
+import AdminLonginForm from '../Admin/AdminLonginForm';
 import { io } from "socket.io-client";
 const  jwt = require("jsonwebtoken");
+
 export default function Blueprint() {
 
   const [msgClick, setmsgClick] = useState(false);
@@ -204,17 +205,12 @@ return text;
     return (
       <>
          <div className="w-full">
-            <Header loginRegisterToggle={loginRegisterToggle}  isLogin={isLogin} showMsg ={messageToggle} collectSearchValue={collectSearchValue} /> 
-           {showApiMessage && <ShowMessage apiMsg={apiMessages} />}
-
-            <div className="flex w-full xl:w-9/12 mx-auto">
-              {/* <div className="w-1/5 hidden mr-5 lg:block">
-                  <Route exact path="/">
-                    <ClassList />
-                  </Route>
-              </div> */}
+          <Header loginRegisterToggle={loginRegisterToggle}  isLogin={isLogin} showMsg ={messageToggle} collectSearchValue={collectSearchValue} /> 
+            {showApiMessage && <ShowMessage apiMsg={apiMessages} />}
+          <div  className="w-full lg:w-4/5 mx-auto">
+             <Switch>
               <Route exact path="/">
-                <div  className="w-full lg:w-4/5 mx-auto"> 
+                <div  className=""> 
                   {ispost ?
                     <Route exact path="/">
                       {
@@ -256,21 +252,25 @@ return text;
                 </div>
                 </Route>
              
-            </div>
-         </div>
-         
          {isLogin &&
-         <Switch>
             <Route path="/userprofile">
               <UserProfile onlineUser={onlineUser} messageToggle={messageToggle}  setFriendName={setFriendName} setFriendIdForChatId={setFriendIdForChatId} setIsLogIn={setIsLogIn} isPostStateChange={isPostStateChange} postChange={postChange} isApiMessage={isApiMessage}  postFormToggle={postFormToggle}  />
             </Route>
-         </Switch>
          }
-
+            
          {msgClick ? <Message FriendName={FriendName} saveChatMsg={saveChatMsg} message={chatMessage}  messageToggle={messageToggle} /> :null }
-         
          {loginshowHide ? <LoginRegister setIsLogIn={setIsLogIn} loginRegisterToggle={loginRegisterToggle} /> :null}
          {togglPostForm ?  <Postfrom postChange={postChange} postFormToggle={postFormToggle} isApiMessage={isApiMessage} /> :null}
+           
+           <Route path="/adminlogin">
+             <AdminLonginForm />
+           </Route>
+           <Route path="*">
+                <ErrorPage />
+           </Route>
+         </Switch>
+          </div>
+         </div>
         </>
     )
 }
