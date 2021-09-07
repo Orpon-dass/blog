@@ -2,10 +2,16 @@ const express =require("express");
 const dotenv =require("dotenv");
 const route =require("./routes/router");
 const dbConnection = require("./database/db.connection");
-const bodyParser =require('body-parser');
+const bodyparser =require('body-parser');
 const fileUpload = require('express-fileupload');
+var cookieParser = require('cookie-parser')
+const path = require("path");
 
 const app = express();
+//set view engine
+app.set("view engine","ejs");
+//app.set("views",path.resolve(__dirname,"views/ejs"));
+
 
 //socet.io server
 const httpServer = require("http").createServer(app)
@@ -65,7 +71,8 @@ dotenv.config();
 const port = process.env.PORT ||3000;
 
 //parse body parser
-app.use(bodyParser.json());
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({extended:true}));
 
 //use express file upload
 app.use(fileUpload());
@@ -81,6 +88,7 @@ app.use(cors({
 
 //connection of mongo db 
 dbConnection();
+app.use(cookieParser());
 app.use('/',route);
 
 // start app

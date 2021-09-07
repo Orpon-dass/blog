@@ -246,7 +246,7 @@ exports.Find_user = async (request,response)=>{
 }
 //check validate route 
 exports.valid = (req,res)=>{
-  let head =req.head;
-    res.json({head})
+  const token=req.cookies.admintoken;
+ res.send(token);
   
 }

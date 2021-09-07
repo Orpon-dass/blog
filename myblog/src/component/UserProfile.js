@@ -9,6 +9,8 @@ import {fetchUserPost,userInfo} from '../Controller/UserController'
 import PostEditForm from './PostEditForm'
 import ProfilePicture from './ProfilePicture';
 import Allmessage from './Allmessage'
+
+
 export default function UserProfile({postFormToggle,isApiMessage,postChange,isPostStateChange,setIsLogIn,setFriendIdForChatId,setFriendName,messageToggle,onlineUser}) {
     const [profileNavigation, setprofileNavigation] = useState(1)
     const [userDetailsEdit,setuserDetailsEdit]= useState(false)

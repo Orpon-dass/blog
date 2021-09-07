@@ -32,6 +32,12 @@ route.post("/api/chatMessage",chatController.chatMessage);
 //admin route 
 route.post("/api/admin/login",adminController.adminlogin);
 route.get("/api/admin/register",adminController.adminRegister);
+route.get('/api/admin/login',adminController.loginpage);
+route.get('/api/admin/home',validation,adminController.homepage);
+route.get('/api/admin/logout',adminController.adminLogout);
+route.get('/api/admin/singlepost/:id',validation,adminController.singlePost);
+route.get('/api/admin/singleuser/:id',validation,adminController.singleUser);
+route.get('/api/admin/deletepost/:id',validation,adminController.deletepost);
 //route for test
 route.get('/api/validroute',validation,userController.valid);
 module.exports =route;

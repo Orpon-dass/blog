@@ -10,6 +10,7 @@ import ShowMessage from './ShowMessage';
 import ErrorPage from './ErrorPage';
 import PostSkeleton from './PostSkeleton';
 import AdminLonginForm from '../Admin/AdminLonginForm';
+import AdminDashBoard from '../component/AdminDashBoard';
 import { io } from "socket.io-client";
 const  jwt = require("jsonwebtoken");
 
@@ -258,17 +259,23 @@ return text;
             </Route>
          }
             
-         {msgClick ? <Message FriendName={FriendName} saveChatMsg={saveChatMsg} message={chatMessage}  messageToggle={messageToggle} /> :null }
-         {loginshowHide ? <LoginRegister setIsLogIn={setIsLogIn} loginRegisterToggle={loginRegisterToggle} /> :null}
-         {togglPostForm ?  <Postfrom postChange={postChange} postFormToggle={postFormToggle} isApiMessage={isApiMessage} /> :null}
+
            
            <Route path="/adminlogin">
              <AdminLonginForm />
            </Route>
+{/* admin dashbord code */}
+        
+            <Route path="/admindashbord">
+                  <AdminDashBoard/>
+            </Route>
            <Route path="*">
                 <ErrorPage />
            </Route>
          </Switch>
+         {msgClick ? <Message FriendName={FriendName} saveChatMsg={saveChatMsg} message={chatMessage}  messageToggle={messageToggle} /> :null }
+         {loginshowHide ? <LoginRegister setIsLogIn={setIsLogIn} loginRegisterToggle={loginRegisterToggle} /> :null}
+         {togglPostForm ?  <Postfrom postChange={postChange} postFormToggle={postFormToggle} isApiMessage={isApiMessage} /> :null}
           </div>
          </div>
         </>
