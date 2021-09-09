@@ -1,8 +1,0 @@
-POST http://localhost:8000/api/createpost/
-
-content-type: application/json
-
-{
-   "userId":"3456789",
-   "postBody":"this is a post one "
-}
