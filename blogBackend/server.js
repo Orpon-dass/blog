@@ -89,6 +89,7 @@ app.use(cors({
 //connection of mongo db 
 dbConnection();
 app.use(cookieParser());
+//only for test
 app.get(req,res,()=>{
     res.send("blog api");
 });
