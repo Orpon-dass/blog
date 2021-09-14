@@ -68,7 +68,7 @@ io.on("connection", socket => {
 
 //use dot env for env variabel
 dotenv.config();
-const port = process.env.PORT ||3000;
+const port = process.env.PORT ||5000;
 
 //parse body parser
 app.use(bodyparser.json());
@@ -89,10 +89,6 @@ app.use(cors({
 //connection of mongo db 
 dbConnection();
 app.use(cookieParser());
-//only for test
-app.get(req,res,()=>{
-    res.send("blog api");
-});
 app.use('/',route);
 
 // start app

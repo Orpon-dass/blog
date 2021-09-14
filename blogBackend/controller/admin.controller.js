@@ -1,7 +1,7 @@
-const adminmodel =  require("../model/admin.model");
-const bcrypt =require("bcrypt");
-const {isEmail,isEmpty} =require("validator");
-const postCollection = require('../model/post.create');
+const adminmodel          =  require("../model/admin.model");
+const bcrypt              =  require("bcrypt");
+const {isEmail,isEmpty}  =require("validator");
+const postCollection     = require('../model/post.create');
 const jwt = require("jsonwebtoken");
 const userDetails = require("../model/user.details");
 

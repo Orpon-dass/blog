@@ -1,4 +1,5 @@
 import React,{useEffect,useState} from 'react'
+import {weburl} from '../Controller/UserController'
 import FriendDetails from './FriendDetails';
 import menImg from '../img/download.png'
 export default function Allmessage({friendId,setFriendIdForChatId,setFriendName,messageToggle,onlineUser}) {
@@ -12,10 +13,10 @@ export default function Allmessage({friendId,setFriendIdForChatId,setFriendName,
     }else{
       setIsOnline(false)
     }
-  })
+  });
      useEffect(() => {
       let userForConversation = async ()=>{
-                  let user = await fetch("http://localhost:8000/api/userfindformessage",{
+                  let user = await fetch(`${weburl}/api/userfindformessage`,{
                       method:"POST",
                       headers:{
                           "Content-Type":"application/json",
@@ -38,7 +39,7 @@ export default function Allmessage({friendId,setFriendIdForChatId,setFriendName,
              <div className="flex bg-gray-100 h-16 relative mr-2 ml-2">
                 <div onClick={()=>{messageHandler(friendDetails.userId)}} className="flex items-center ml-3">
                   {friendDetails.avatar !==""  &&
-                    <img src={`http://localhost:8000/image/${friendDetails.avatar}`} className="object-cover object-center h-12 w-12 rounded-full" alt="userProfilePicture"/>
+                    <img src={`${weburl}/image/${friendDetails.avatar}`} className="object-cover object-center h-12 w-12 rounded-full" alt="userProfilePicture"/>
                   }
                   {friendDetails.avatar ==="" &&
                     <img src={menImg} className="object-cover object-center h-12 w-12 rounded-full" alt="userProfilePicture"/>

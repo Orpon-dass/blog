@@ -1,13 +1,15 @@
 import React,{useEffect, useState} from 'react'
 import moment from 'moment'; 
 import menImg from '../img/download.png'
+import {weburl} from '../Controller/UserController'
+
 export default function Content({buttonName,threeDot,body,studentClass,address,salary,postDate,postEditHandler,postId,deletePost,isLogin,user,setFriendIdForChatId,userId,messageToggle,isApiMessage}) {
     const [postAction, setpostAction] = useState(false);
     const [userinformation, setuserinformation] = useState(null)
     useEffect(() => {
       const collectUserInformation = async ()=>{
       let userId = localStorage.getItem("token");
-      const info = await fetch("http://localhost:8000/api/showuserdetils",{
+      const info = await fetch(`${weburl}/api/showuserdetils`,{
         method:"POST",
         headers:{
             "Content-Type":"application/json",
@@ -37,7 +39,7 @@ export default function Content({buttonName,threeDot,body,studentClass,address,s
             <div className="flex">
                 <div className="flex justify-center">
                     { user.avatar!=="" &&
-                        <img className="p-2 object-cover object-center h-20 w-20 rounded-full" src={`http://localhost:8000/image/${user.avatar}`} alt="userImage"/>
+                        <img className="p-2 object-cover object-center h-20 w-20 rounded-full" src={`${weburl}/image/${user.avatar}`} alt="userImage"/>
                     }
                     { user.avatar=== "" &&
                         <img className="p-2 object-cover object-center h-20 w-20 rounded-full" src={menImg} alt="userImage"/>

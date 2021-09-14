@@ -1,5 +1,6 @@
 import React from 'react'
 import menImg from '../img/download.png'
+import {weburl} from '../Controller/UserController'
 
 export default function FriendDetails({setShowFriendDetails,friendDetails}) {
     return (
@@ -13,7 +14,7 @@ export default function FriendDetails({setShowFriendDetails,friendDetails}) {
                <div className="flex  justify-center">
                <div className="">
                       {friendDetails.avatar ?
-                       <img className="p-2 object-cover object-center w-44 h-44 rounded-full"  src={`http://localhost:8000/image/${friendDetails.avatar}`} alt="userImage"/>
+                       <img className="p-2 object-cover object-center w-44 h-44 rounded-full"  src={`${weburl}/image/${friendDetails.avatar}`} alt="userImage"/>
                      :
                        <img className="p-2 object-cover object-center w-44 h-44 rounded-full" src={menImg}  alt="userImage"/>
                       }

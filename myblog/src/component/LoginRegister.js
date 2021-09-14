@@ -1,4 +1,5 @@
  import React,{useState} from 'react'
+import {weburl} from '../Controller/UserController'
  export default function LoginRegister({loginRegisterToggle,setIsLogIn}) {
      const [showloginRegister, setshowloginRegister] = useState(1)
      const [saveRegister, setsaveRegister] = useState({name:"",email:"",password:""});
@@ -16,7 +17,7 @@
      }
      //send user data to database
      const sendRegisterdata = async ()=>{
-        let userResponse = await fetch("http://localhost:8000/api/createuser",{
+        let userResponse = await fetch(`${weburl}/api/createuser`,{
              method :"POST",
              headers:{
                  "Content-Type":"application/json",
@@ -37,7 +38,7 @@
 
         }
         const sendLoginInformation= async ()=>{
-            let userLogin = await fetch("http://localhost:8000/api/loginuser",{
+            let userLogin = await fetch(`${weburl}/api/loginuser`,{
                  method:"POST",
                  headers:{
                      "Content-Type":"application/json",

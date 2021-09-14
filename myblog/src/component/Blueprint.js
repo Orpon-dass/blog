@@ -9,13 +9,11 @@ import Postfrom from './Postfrom';
 import ShowMessage from './ShowMessage';
 import ErrorPage from './ErrorPage';
 import PostSkeleton from './PostSkeleton';
-import AdminLonginForm from '../Admin/AdminLonginForm';
-import AdminDashBoard from '../component/AdminDashBoard';
 import { io } from "socket.io-client";
+import {weburl} from '../Controller/UserController'
 const  jwt = require("jsonwebtoken");
 
 export default function Blueprint() {
-
   const [msgClick, setmsgClick] = useState(false);
   const [loginshowHide, setloginshowHide] = useState(false);
   const [togglPostForm , settogglPostForm] =useState(false);
@@ -35,7 +33,7 @@ export default function Blueprint() {
 //socket code for real time chat message 
   const socket = useRef();
     useEffect(() => {
-      socket.current=io("ws://localhost:8000");
+      socket.current=io("https://orpon-blog-app.herokuapp.com");
       let user = localStorage.getItem("token");
       if(user){
         const user_id = jwt.verify(user,process.env.REACT_APP_SECRET_KEY);
@@ -63,7 +61,7 @@ export default function Blueprint() {
   //post api call 
   useEffect(() => {
   const postApiCall = async ()=>{
-  let post = await fetch("http://localhost:8000/api/showallpost",{
+  let post = await fetch(`${weburl}/api/showallpost`,{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
@@ -113,7 +111,7 @@ export default function Blueprint() {
     const showMessage = async () =>{
       let userId = localStorage.getItem("token");
       if(FriendIdForChatId!==null){
-        let message = await fetch("http://localhost:8000/api/chatMessage",{
+        let message = await fetch(`${weburl}/api/chatMessage`,{
         method:"POST",
         headers:{
           "Content-Type":"application/json",
@@ -145,7 +143,7 @@ return text;
       const receiverId = localStorage.getItem("token");
       const user_id = jwt.verify(receiverId,process.env.REACT_APP_SECRET_KEY)
       socket.current.emit("messagedetails",{_id:makeid(16),senderId:user_id.id,receiverId:FriendIdForChatId,messageBody:chatMessage})
-     let saveMessage = await fetch("http://localhost:8000/api/messagesave",{
+     let saveMessage = await fetch(`${weburl}/api/messagesave`,{
         method:"POST",
         headers:{
           "Content-Type":"application/json",
@@ -184,7 +182,7 @@ return text;
 
  //search by user 
  const collectSearchValue = async (searchValue)=>{
-  let search = await fetch("http://localhost:8000/api/searchpost",{
+  let search = await fetch(`${weburl}/api/searchpost`,{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
@@ -258,17 +256,7 @@ return text;
               <UserProfile onlineUser={onlineUser} messageToggle={messageToggle}  setFriendName={setFriendName} setFriendIdForChatId={setFriendIdForChatId} setIsLogIn={setIsLogIn} isPostStateChange={isPostStateChange} postChange={postChange} isApiMessage={isApiMessage}  postFormToggle={postFormToggle}  />
             </Route>
          }
-            
-
-           
-           <Route path="/adminlogin">
-             <AdminLonginForm />
-           </Route>
-{/* admin dashbord code */}
-        
-            <Route path="/admindashbord">
-                  <AdminDashBoard/>
-            </Route>
+                 
            <Route path="*">
                 <ErrorPage />
            </Route>

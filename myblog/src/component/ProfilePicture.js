@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-
+import {weburl} from '../Controller/UserController'
 export default function ProfilePicture({profileToggle,isApiMessage,profileChange}) {
     const [profilePic, setprofilePic] = useState(null)
     const userId = localStorage.getItem("token");
@@ -8,7 +8,7 @@ export default function ProfilePicture({profileToggle,isApiMessage,profileChange
         const formdata =new FormData();
         formdata.append("photo",profilePic);
         formdata.append("userId",userId);
-        let saveProfilePic = await fetch("http://localhost:8000/api/profilepicupload",{
+        let saveProfilePic = await fetch(`${weburl}/api/profilepicupload`,{
             method:"POST",
            body:formdata
         })

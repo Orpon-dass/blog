@@ -178,23 +178,28 @@ exports.profilePhotoUpload= async (request,response)=>{
      let profilePicName;
      let uploadPath;
      if (!request.files || Object.keys(request.files).length === 0) {
-      return response.status(400).json({message:'No files were uploaded.'});
+      return response.status(400).json({message:'No photo were selected.'});
      }
      let originalFile =request.files.photo;
      profilePicName =new Date().getTime() + '-'+ originalFile.name;
-     uploadPath = __dirname + './../public/image/'+profilePicName;
-     originalFile.mv(uploadPath,(err)=>{
+     uploadPath ="public/image/"+ profilePicName;
+
+     originalFile.mv(uploadPath,function(err){
         if(err){
-          response.status(500).json({message:"file not uploded"});
-          return;
+          return response.json({message:uploadPath})
         }
      });
      if(originalFile){
       let deleteuserPhoto = await userDetails.findOne({userId:user_Id.id});
-       fs.unlink(__dirname + './../public/image/'+deleteuserPhoto.avatar,function(err){
-        if(err) return console.log(err)
-        console.log("file deleted successfuly")
-       })
+       if(deleteuserPhoto.avatar!==""){
+         fs.unlink("public/image/"+ deleteuserPhoto.avatar,function(err){
+          console.log(`file delete problem is:${err}`)
+          if(err){
+             return response.json({message:"photo not deleted"})
+          } 
+         });
+       }
+
       let savePhoto = await userDetails.findOneAndUpdate({userId:user_Id.id},{
        userId:user_Id.id,
        avatar:profilePicName
@@ -203,11 +208,6 @@ exports.profilePhotoUpload= async (request,response)=>{
        new: true,
        upsert: true
      });
-    //  let postAvatarUpdate = await postCollection.updateMany({userId:user_Id.id},
-    //   {
-    //      avatar:profilePicName 
-    //   });
-
        response.status(200).json({message:"Profile photo uploaded."})
      }
    }catch(error){

@@ -40,4 +40,6 @@ return {info,status}
 //     return finalDate ;
 // } 
 // calculate time for post 
-
+//https://orpon-blog-app.herokuapp.com
+//
+export const weburl = "http://localhost:8000";

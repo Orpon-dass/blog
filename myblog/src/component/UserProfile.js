@@ -9,7 +9,7 @@ import {fetchUserPost,userInfo} from '../Controller/UserController'
 import PostEditForm from './PostEditForm'
 import ProfilePicture from './ProfilePicture';
 import Allmessage from './Allmessage'
-
+import {weburl} from '../Controller/UserController'
 
 export default function UserProfile({postFormToggle,isApiMessage,postChange,isPostStateChange,setIsLogIn,setFriendIdForChatId,setFriendName,messageToggle,onlineUser}) {
     const [profileNavigation, setprofileNavigation] = useState(1)
@@ -30,7 +30,7 @@ export default function UserProfile({postFormToggle,isApiMessage,postChange,isPo
     const [isMessage, setisMessage] = useState(false)
     const history = useHistory();
     const fetchUserInfo = async () =>{
-    let userInformation = await userInfo("http://localhost:8000/api/showuserdetils");
+    let userInformation = await userInfo(`${weburl}/api/showuserdetils`);
     if(userInformation.info){
         setuserDetails(userInformation.info);
         setisUesrinfo(true);
@@ -57,7 +57,7 @@ const toggleUserDetailsControll =()=>{
 //fetch user post
 const fetchPost = async () =>
 {
-    let singlePostResponse =await fetchUserPost("http://localhost:8000/api/usersinglepost");
+    let singlePostResponse =await fetchUserPost(`${weburl}/api/usersinglepost`);
     if(singlePostResponse){
         setuserpost(singlePostResponse);
         setisPost(true)
@@ -70,7 +70,7 @@ useEffect(() => {
 },[isPostStateChange]);
 //save userdetails in database
 const collectUserDetails = async (data) =>{
-let savedUserDetails = await fetch("http://localhost:8000/api/userdetails",{
+let savedUserDetails = await fetch(`${weburl}api/userdetails`,{
     method:"POST",
     headers:{
         "Content-Type":"application/json",
@@ -99,7 +99,7 @@ if(userDetailsResponse.username){
 }
 //save user edit data
 const editDataCollection = async (data)=>{
-    let savedUserDetails = await fetch("http://localhost:8000/api/updateusdetails",{
+    let savedUserDetails = await fetch(`${weburl}/api/updateusdetails`,{
         method:"POST",
         headers:{
             "Content-Type":"application/json",
@@ -136,7 +136,7 @@ const postEditHandler =(e)=>{
 } 
 const collectPostEditData =async (arg)=>{
  let finalEditPostData = {...arg,postId}
- let postSave = await fetch("http://localhost:8000/api/updatepost",{
+ let postSave = await fetch(`${weburl}/api/updatepost`,{
            method:"POST",
            headers:{
                "Content-Type":"application/json",
@@ -162,7 +162,7 @@ const collectPostEditData =async (arg)=>{
 }
 //delete user post by id
 const deleteUserPost = async (postDeleteId)=>{
- let deletePost = await fetch("http://localhost:8000/api/deleteuserpost",{
+ let deletePost = await fetch(`${weburl}/api/deleteuserpost`,{
     method:"POST",
     headers:{
         "Content-Type":"application/json",
@@ -196,7 +196,7 @@ const logOutUser = async ()=>{
 //fetch user message
 let userMessage = async ()=>{
     let userId = localStorage.getItem("token");
-    let message = await fetch("http://localhost:8000/api/messageshow",{
+    let message = await fetch(`${weburl}/api/messageshow`,{
         method:"POST",
         headers:{
         "Content-Type":"application/json",
@@ -225,7 +225,7 @@ useEffect(() => {
               <div className="relative">
                   <div className="">
                       {userDetails.avatar ?
-                       <img className="p-2 object-cover object-center w-44 h-44 rounded-full"  src={`http://localhost:8000/image/${userDetails.avatar}`} alt="userImage"/>
+                       <img className="p-2 object-cover object-center w-44 h-44 rounded-full"  src={`${weburl}/image/${userDetails.avatar}`} alt="userImage"/>
                      :
                        <img className="p-2 object-cover object-center w-44 h-44 rounded-full" src={menImg}  alt="userImage"/>
                       }

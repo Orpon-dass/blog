@@ -1,4 +1,5 @@
 import React,{useState} from 'react'
+import {weburl} from '../Controller/UserController'
 export default function Postfrom({postFormToggle,isApiMessage,postChange}) {
     let userId = localStorage.getItem("token");
     const [post, setpost] = useState({userId,postBody:"",Studentclass:"",address:"",salary:""});
@@ -8,7 +9,7 @@ export default function Postfrom({postFormToggle,isApiMessage,postChange}) {
     }
     //save post
     const submitPost = async ()=>{
-        let postSave = await fetch("http://localhost:8000/api/createpost/",{
+        let postSave = await fetch(`${weburl}/api/createpost/`,{
            method:"POST",
            headers:{
                "Content-Type":"application/json",
